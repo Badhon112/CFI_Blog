@@ -1,17 +1,25 @@
 import React, { useState } from "react";
 import { Box, Button, TextField, styled } from "@mui/material";
+import axios, { Axios } from "axios";
+import { api_Call } from "../../service/api";
 
-const signupInitialValues={
-    name:'',
-    Email:'',
-    password:''
-}
+const signupInitialValues = {
+  name: "",
+  email: "",
+  password: "",
+};
 
 export default function Login() {
   const [account, setAccount] = useState("login");
-  const [signup, setSignup] = useState(signupInitialValues)
+  const [signup, setSignup] = useState(signupInitialValues);
   const onInputChange = (e) => {
-    setSignup({...signup,[e.target.name]:e.target.value})
+    setSignup({ ...signup, [e.target.name]: e.target.value });
+  };
+  const signupUser = async () => {
+    if (signup.name != "" && signup.email != "" && signup.password != "") {
+      let response = await axios.post("http://localhost:8000/signup", signup);
+      console.log(response);
+    }
   };
   return (
     <Box className="w-[400px] m-auto ">
@@ -21,7 +29,7 @@ export default function Login() {
           <Box className="px-6 py-9 flex flex-1 flex-col space-y-5">
             <TextField
               id="outlined-basic"
-              label="Email"
+              label="email"
               variant="outlined"
               type="email"
             />
@@ -30,7 +38,6 @@ export default function Login() {
               label="Password"
               variant="outlined"
               type="password"
-
             />
             <Button variant="contained">Login</Button>
             <p className="text-center">OR</p>
@@ -54,9 +61,10 @@ export default function Login() {
             />
             <TextField
               id="outlined-basic"
-              label="Email"
+              label="email"
               variant="outlined"
-              name="Email"
+              name="email"
+              type="name"
               onChange={(e) => onInputChange(e)}
             />
             <TextField
@@ -67,7 +75,11 @@ export default function Login() {
               name="password"
               onChange={(e) => onInputChange(e)}
             />
-            <Button className="shadow-xl shadow-gray-500" variant="contained">
+            <Button
+              onClick={() => signupUser()}
+              className="shadow-xl shadow-gray-500"
+              variant="contained"
+            >
               Sign up
             </Button>
             <p className="text-center">OR</p>

@@ -3,9 +3,10 @@ const userSchema=mongoose.Schema({
     name:{
         type:String,
         require:true,
-        unique:true
+        unique:true,
+        
     },
-    username:{
+    email:{
         type:String,
         require:true,
         unique:true
