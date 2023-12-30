@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { Box, Button, TextField, styled } from "@mui/material";
 import axios, { Axios } from "axios";
-import { api_Call } from "../../service/api";
+// import { api_Call } from "../../service/api";
 
 const signupInitialValues = {
   name: "",
+  email: "",
+  password: "",
+};
+const loginInitialValue = {
   email: "",
   password: "",
 };
@@ -12,13 +16,32 @@ const signupInitialValues = {
 export default function Login() {
   const [account, setAccount] = useState("login");
   const [signup, setSignup] = useState(signupInitialValues);
+  const [login, setLogin] = useState(loginInitialValue);
+  const [Errors, setErrors] = useState(false);
   const onInputChange = (e) => {
     setSignup({ ...signup, [e.target.name]: e.target.value });
   };
   const signupUser = async () => {
     if (signup.name != "" && signup.email != "" && signup.password != "") {
       let response = await axios.post("http://localhost:8000/signup", signup);
-      console.log(response);
+      // console.log(response);
+      if (response.status === 200) {
+        setAccount("login");
+      } else {
+        setErrors(true);
+      }
+    }
+  };
+  const onValueChange = (e) => {
+    setLogin({ ...login, [e.target.name]: e.target.value });
+  };
+  const loginUser = async () => {
+    let response = await axios.post("http://localhost:8000/login", login);
+    if(response===200){
+      console.log("Success");
+    }
+    else{
+      console.log("Something went wrong");
     }
   };
   return (
@@ -32,14 +55,22 @@ export default function Login() {
               label="email"
               variant="outlined"
               type="email"
+              name="email"
+              value={login.email}
+              onChange={(e) => onValueChange(e)}
             />
             <TextField
               id="filled-basic"
               label="Password"
               variant="outlined"
               type="password"
+              name="password"
+              value={login.password}
+              onChange={(e) => onValueChange(e)}
             />
-            <Button variant="contained">Login</Button>
+            <Button variant="contained" onClick={() => loginUser()}>
+              Login
+            </Button>
             <p className="text-center">OR</p>
             <Button
               className="shadow-xl shadow-gray-300"
@@ -82,6 +113,7 @@ export default function Login() {
             >
               Sign up
             </Button>
+            {Errors ? <p className="text-red-400 text-center">Errors</p> : ""}
             <p className="text-center">OR</p>
             <Button variant="contained" onClick={() => setAccount("login")}>
               Already have an Account
